@@ -1,159 +1,520 @@
-import { useState } from 'react'
-import { approach, company, services } from './content'
+import { useEffect, useRef, useState } from 'react'
+import AnimatedChart from './AnimatedChart'
+import {
+  Connectivity,
+  Strategies,
+  HowItWorks,
+  WhyHybridge,
+  ConsolePreview,
+} from './LandingSections'
+import { usePageMotion } from './motion'
 
 const currentYear = new Date().getFullYear()
 
-function Arrow({ diagonal = false }: { diagonal?: boolean }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d={diagonal ? 'M6 18 18 6M6 6h12v12' : 'M4 12h16m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function Brand({ footer = false }: { footer?: boolean }) {
-  return (
-    <a className={`brand${footer ? ' brand-footer' : ''}`} href="#home" aria-label="Hybridge Technologies home">
-      <svg className="brand-symbol" width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <rect width="48" height="48" rx="12" fill="currentColor" />
-        <path d="M12 34V14M36 34V14M12 26C18 16 30 16 36 26M12 30H36" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
-      </svg>
-      <span>hybridge<span className="brand-subtitle">TECHNOLOGIES</span></span>
-    </a>
-  )
-}
-
-function ServiceIcon({ type }: { type: typeof services[number]['icon'] }) {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {type === 'code' && <><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18" /></>}
-      {type === 'cloud' && <><path d="M6 18a4 4 0 0 1-.7-7.9A7 7 0 0 1 19 9a4.5 4.5 0 0 1-.5 9" /><path d="M12 14v7m-3-4 3-3 3 3" /></>}
-      {type === 'compass' && <><circle cx="12" cy="12" r="9" /><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z" /></>}
-    </svg>
-  )
-}
-
-function BridgeIllustration() {
-  return (
-    <div className="bridge-illustration" aria-hidden="true">
-      <div className="orbit orbit-one" />
-      <div className="orbit orbit-two" />
-      <div className="bridge-label label-ideas"><span /> Your vision</div>
-      <div className="bridge-label label-engineering"><span /> Our expertise</div>
-      <svg className="bridge-art" viewBox="0 0 600 480" fill="none">
-        <defs>
-          <linearGradient id="bridge-gradient" x1="160" y1="100" x2="480" y2="400" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#6A94FF" /><stop offset="1" stopColor="#144BEA" />
-          </linearGradient>
-          <linearGradient id="deck-gradient" x1="60" y1="320" x2="550" y2="380" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#2259E8" /><stop offset="1" stopColor="#81ADFF" />
-          </linearGradient>
-        </defs>
-        <ellipse cx="300" cy="414" rx="220" ry="22" fill="#144BEA" opacity=".07" />
-        <path d="m64 312 102-59 385 79-102 59L64 312Z" fill="#D5E2FF" />
-        <path d="M64 312v18l385 79v-18L64 312Z" fill="url(#deck-gradient)" />
-        <path d="m449 391 102-59v18l-102 59v-18Z" fill="#194BC5" />
-        <path d="M170 330V134l23-13 22 5v213l-45-9Z" fill="url(#bridge-gradient)" />
-        <path d="m170 134 23-13v204l-23 5V134Z" fill="#A7C3FF" />
-        <path d="M403 378V182l23-13 22 5v213l-45-9Z" fill="url(#bridge-gradient)" />
-        <path d="m403 182 23-13v204l-23 5V182Z" fill="#A7C3FF" />
-        <path d="M194 150c63 150 149 167 234 47" stroke="#AEC7FF" strokeWidth="7" />
-        <path d="M173 163c65 152 149 168 233 46" stroke="#2159E6" strokeWidth="7" />
-        {[0, 1, 2, 3, 4, 5, 6].map((index) => {
-          const x = 213 + index * 29
-          const y = [220, 254, 277, 291, 289, 276, 254][index]
-          return <path key={x} d={`M${x} ${y}v${324 + index * 6 - y}`} stroke="#5E8CF2" strokeWidth="2.5" />
-        })}
-        <path d="m87 306 353 73m-312-96 353 73" stroke="white" strokeWidth="2" strokeDasharray="10 9" opacity=".8" />
-        <path d="m64 305 385 79 102-59" stroke="#9AB9F9" strokeWidth="3" />
-      </svg>
-      <div className="bridge-caption"><span className="small-cross">+</span> Connecting possibility</div>
-    </div>
-  )
-}
-
 export default function App() {
+  usePageMotion()
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (event.target instanceof Element && !event.target.closest('.header')) {
+        setMenuOpen(false)
+      }
+    }
+    const desktop = window.matchMedia('(min-width: 801px)')
+    const closeOnDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setMenuOpen(false)
+    }
+
+    document.addEventListener('keydown', closeOnEscape)
+    document.addEventListener('click', closeOnOutsideClick)
+    desktop.addEventListener('change', closeOnDesktop)
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape)
+      document.removeEventListener('click', closeOnOutsideClick)
+      desktop.removeEventListener('change', closeOnDesktop)
+    }
+  }, [menuOpen])
 
   return (
     <>
-      <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header" id="home">
-        <div className="container header-inner">
-          <Brand />
-          <button className="menu-toggle" aria-expanded={menuOpen} aria-controls="main-nav" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}>
-            <span className={menuOpen ? 'menu-lines is-open' : 'menu-lines'} />
-          </button>
-          <nav id="main-nav" className={`navigation${menuOpen ? ' navigation-open' : ''}`} aria-label="Main navigation">
-            <a href="#services" onClick={() => setMenuOpen(false)}>What we do</a>
-            <a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a>
-            <a href="#about" onClick={() => setMenuOpen(false)}>About us</a>
-            <a className="button button-small" href="#contact" onClick={() => setMenuOpen(false)}>Let’s connect <Arrow diagonal /></a>
+      <a className="skip" href="#contenido">
+        Ir al contenido
+      </a>
+      <header className="header">
+        <div className="container nav">
+          <a className="brand" href="#inicio" aria-label="Hybridge, inicio">
+            <img
+              src="/hybridge-logo.png"
+              width="650"
+              height="350"
+              alt="Hybridge"
+            />
+          </a>
+          <nav className="desktop-nav" aria-label="Navegación principal">
+            <a href="#conectividad">Conectividad</a>
+            <a href="#estrategias">Estrategias</a>
+            <a href="#como">Cómo funciona</a>
+            <a href="#consola">Consola</a>
           </nav>
+          <a
+            className="button button-small button-outline nav-contact"
+            href="#contacto"
+          >
+            Hablemos
+          </a>
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+            ref={menuButtonRef}
+            aria-controls="mobile-nav"
+          >
+            <span></span>
+            <span></span>
+          </button>
         </div>
+        <nav
+          className="mobile-nav"
+          id="mobile-nav"
+          aria-label="Navegación móvil"
+          hidden={!menuOpen}
+          onClick={(event) => {
+            if ((event.target as HTMLElement).closest('a')) setMenuOpen(false)
+          }}
+        >
+          <a href="#conectividad">Conectividad</a>
+          <a href="#estrategias">Estrategias</a>
+          <a href="#como">Cómo funciona</a>
+          <a href="#por-que">Por qué HyBridge</a>
+          <a href="#consola">Consola</a>
+          <a href="#preguntas">Preguntas frecuentes</a>
+          <a href="#contacto">Hablemos</a>
+        </nav>
+        <div className="page-progress" aria-hidden="true" />
       </header>
-
-      <main id="main">
-        <section className="hero container" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow"><span className="status-dot" /> TECHNOLOGY WITH PURPOSE</p>
-            <h1 id="hero-title">Bridging ideas.<br /><span>Building<br className="desktop-break" /> possibility.</span></h1>
-            <p className="hero-description">We connect your vision with the technology to make it happen. Thoughtful software. Solid infrastructure. A partner for the journey.</p>
-            <div className="hero-actions">
-              <a className="button" href="#contact">Build with us <Arrow diagonal /></a>
-              <a className="text-link" href="#services">Explore our services <Arrow /></a>
-            </div>
-            <p className="hero-note"><span className="small-cross">+</span> From the first idea to what comes next.</p>
+      <main id="contenido">
+        <section className="hero" id="inicio" aria-labelledby="hero-title">
+          <div className="hero-art" aria-hidden="true">
+            <AnimatedChart kind="hero" />
           </div>
-          <BridgeIllustration />
+          <div className="container hero-content">
+            <p className="eyebrow">
+              <span className="eyebrow-line"></span> MOTOR DE EJECUCIÓN · FIX
+              NATIVO
+            </p>
+            <h1 id="hero-title">
+              La velocidad
+              <br />
+              de tu próxima
+              <br />
+              <span>ventaja.</span>
+            </h1>
+            <p className="hero-description">
+              Transformá la complejidad del mercado en capacidad operativa.
+              Tecnología de punta para ejecutar tus estrategias con rapidez,
+              precisión y control.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-green" href="#contacto">
+                Potenciá tu mesa
+              </a>
+              <a className="text-link" href="#soluciones">
+                Explorá las soluciones<span className="link-line"></span>
+              </a>
+            </div>
+            <div className="hero-note">
+              <span className="note-symbol">+</span>
+              <span>
+                Ingeniería de sistemas.
+                <br />
+                Experiencia en mercados financieros.
+              </span>
+            </div>
+          </div>
+          <div className="art-caption" aria-hidden="true">
+            <span className="caption-rule"></span>
+            <span>
+              PRECISIÓN EN CADA DECISIÓN.
+              <br />
+              VELOCIDAD EN CADA EJECUCIÓN.
+            </span>
+          </div>
+          <div className="container hero-bottom">
+            <span>EL MERCADO SE MUEVE. VOS TAMBIÉN.</span>
+            <a href="#soluciones" aria-label="Descubrir soluciones">
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 5v14m-6-6 6 6 6-6"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                />
+              </svg>
+            </a>
+            <span className="hero-index">01 / HYBRIDGE</span>
+          </div>
         </section>
-
-        <div className="principles-strip">
-          <div className="container principles-inner">
-            <span>Built on good foundations.</span>
-            <p>Clear thinking <span>+</span> Thoughtful engineering <span>+</span> Shared ambition</p>
+        <div className="proof-band">
+          <div className="container proof-grid">
+            <span>
+              <i></i>FIX nativo
+            </span>
+            <span>
+              <i></i>BYMA
+            </span>
+            <span>
+              <i></i>ROFEX / MATBA
+            </span>
+            <span>
+              <i></i>XMEV
+            </span>
           </div>
         </div>
 
-        <section className="section container" id="services" aria-labelledby="services-title">
-          <div className="section-heading">
-            <div><p className="eyebrow">WHAT WE DO</p><h2 id="services-title">The right technology.<br />Real possibilities.</h2></div>
-            <p>We bring the pieces together to help your business move forward, wherever you are in your journey.</p>
-          </div>
-          <div className="services-grid">
-            {services.map((service) => (
-              <article className="service-card" key={service.number}>
-                <div className="service-card-top"><span className="service-icon"><ServiceIcon type={service.icon} /></span><span className="service-number">/{service.number}</span></div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <ul className="service-tags">{service.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
+        <Connectivity />
+        <Strategies />
+
+        <section
+          className="solutions light-section"
+          id="soluciones"
+          aria-labelledby="solutions-title"
+        >
+          <div className="container">
+            <div className="section-top">
+              <p className="eyebrow">SOLUCIONES A TU MEDIDA</p>
+              <span className="section-aside">
+                Más posibilidades.
+                <br />
+                Menos fricción.
+              </span>
+            </div>
+            <div className="section-heading">
+              <h2 id="solutions-title">
+                Menos tareas manuales.
+                <br />
+                <span>Más capacidad operativa.</span>
+              </h2>
+              <p>
+                Una infraestructura flexible para tu forma de operar, desde la
+                automatización diaria hasta las estrategias más complejas.
+              </p>
+            </div>
+            <div className="solution-grid">
+              <article className="solution">
+                <div className="solution-top">
+                  <span className="number">01</span>
+                  <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="m18 3-11 15h8l-1 11 11-16h-8z" />
+                  </svg>
+                </div>
+                <h3>
+                  Automatización
+                  <br />
+                  operativa
+                </h3>
+                <p>
+                  Liberá a tu equipo de tareas repetitivas. Automatizá pases,
+                  controles de saldos y otras operaciones de tu mesa.
+                </p>
+                <span className="solution-tag">MÁS FOCO EN DECIDIR</span>
               </article>
-            ))}
+              <article className="solution">
+                <div className="solution-top">
+                  <span className="number">02</span>
+                  <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M5 26V6m0 20h23M11 19V13m6 9V8m6 10V4" />
+                  </svg>
+                </div>
+                <h3>
+                  Market making
+                  <br />y estrategias
+                </h3>
+                <p>
+                  Implementá estrategias algorítmicas y operá en múltiples
+                  mercados con una infraestructura preparada para la
+                  complejidad.
+                </p>
+                <span className="solution-tag">AMPLIÁ TU ALCANCE</span>
+              </article>
+              <article className="solution">
+                <div className="solution-top">
+                  <span className="number">03</span>
+                  <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="m11 8-8 8 8 8m10-16 8 8-8 8m-3-20-4 24" />
+                  </svg>
+                </div>
+                <h3>
+                  Desarrollo
+                  <br />a tu medida
+                </h3>
+                <p>
+                  Integrá tus propios algoritmos en Python y adaptá la
+                  tecnología a los objetivos y necesidades de tu organización.
+                </p>
+                <span className="solution-tag">
+                  TU LÓGICA. NUESTRA TECNOLOGÍA.
+                </span>
+              </article>
+            </div>
           </div>
         </section>
 
-        <section className="about-section" id="about" aria-labelledby="about-title">
-          <div className="container about-inner">
-            <div><p className="eyebrow">WHY HYBRIDGE</p><h2 id="about-title">{company.tagline}</h2></div>
-            <div className="about-copy"><p>Technology works best when it connects people, ideas, and opportunities. That belief is at the heart of Hybridge.</p><p>We bring curiosity, care, and practical thinking to every challenge. Working alongside you, we build solutions with a clear purpose and a foundation for growth.</p><a className="text-link" href="#contact">Meet your next technology partner <Arrow diagonal /></a></div>
+        <HowItWorks />
+        <WhyHybridge />
+
+        <section
+          className="technology"
+          id="tecnologia"
+          aria-labelledby="technology-title"
+        >
+          <div className="container tech-grid">
+            <div className="tech-intro">
+              <p className="eyebrow">INGENIERÍA Y MERCADOS</p>
+              <h2 id="technology-title">
+                Cada oportunidad
+                <br />
+                tiene su <em>momento.</em>
+              </h2>
+              <p>
+                Tu infraestructura tiene que estar a la altura. Combinamos
+                conocimiento del mercado con ingeniería para acompañar cada
+                etapa de tu operación.
+              </p>
+              <a className="text-link" href="#contacto">
+                Conocé cómo podemos ayudarte<span className="link-line"></span>
+              </a>
+            </div>
+            <div className="tech-features">
+              <article>
+                <span className="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="m13 3-7 10h6l-1 8 7-11h-6z" />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Velocidad que cuenta</h3>
+                  <p>
+                    Baja latencia para procesar información y ejecutar
+                    estrategias cuando el mercado lo requiere.
+                  </p>
+                </div>
+              </article>
+              <article>
+                <span className="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6zM8 12l3 3 5-6" />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Preparada para lo imprevisible</h3>
+                  <p>
+                    Una arquitectura pensada para escenarios de volatilidad y
+                    cambios en las condiciones del mercado.
+                  </p>
+                </div>
+              </article>
+              <article>
+                <span className="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <path d="M17.5 14v7M14 17.5h7" />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Crece con tu operación</h3>
+                  <p>
+                    Herramientas modulares que se adaptan a distintos niveles de
+                    usuarios, equipos y proyectos.
+                  </p>
+                </div>
+              </article>
+              <article>
+                <span className="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v6h4v-6zm16 0h2v6h-4v-6zm0 6c0 3-4 3-7 3" />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Un equipo detrás de la tecnología</h3>
+                  <p>
+                    Especialistas en ingeniería y finanzas para acompañarte
+                    antes, durante y después de la rueda.
+                  </p>
+                </div>
+              </article>
+            </div>
           </div>
         </section>
 
-        <section className="section container" id="approach" aria-labelledby="approach-title">
-          <div className="section-heading"><div><p className="eyebrow">OUR APPROACH</p><h2 id="approach-title">A shared vision.<br />A clear path forward.</h2></div><p>Good partnerships start with listening. Here’s how we turn a conversation into progress.</p></div>
-          <div className="approach-grid">{approach.map((step, index) => <article className="approach-step" key={step.title}><span className="step-number">0{index + 1}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div>
+        <ConsolePreview />
+
+        <section
+          className="faq light-section"
+          id="preguntas"
+          aria-labelledby="faq-title"
+        >
+          <div className="container faq-grid">
+            <div>
+              <p className="eyebrow">PREGUNTAS FRECUENTES</p>
+              <h2 id="faq-title">
+                Lo esencial,
+                <br />
+                sin vueltas.
+              </h2>
+              <p className="faq-intro">
+                La tecnología es compleja.
+                <br />
+                Empezar no tiene por qué serlo.
+              </p>
+            </div>
+            <div className="faq-list">
+              <details>
+                <summary>
+                  ¿Necesito saber programar?
+                  <span className="plus" aria-hidden="true"></span>
+                </summary>
+                <div className="faq-answer">
+                  No para usar las herramientas básicas. Para desarrollar e
+                  integrar algoritmos propios, necesitás conocimientos de
+                  Python.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  ¿Para quién está pensada Hybridge?
+                  <span className="plus" aria-hidden="true"></span>
+                </summary>
+                <div className="faq-answer">
+                  Para traders, mesas de operaciones e instituciones financieras
+                  que buscan automatizar tareas o implementar estrategias
+                  algorítmicas. La tecnología se adapta a distintos niveles de
+                  uso.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  ¿Puedo desarrollar mis propias estrategias?
+                  <span className="plus" aria-hidden="true"></span>
+                </summary>
+                <div className="faq-answer">
+                  Sí. Los módulos avanzados permiten trabajar con algoritmos
+                  propios y solicitar desarrollos específicos. El alcance
+                  depende de las necesidades de tu proyecto y del servicio
+                  contratado.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  ¿El trading algorítmico garantiza ganancias?
+                  <span className="plus" aria-hidden="true"></span>
+                </summary>
+                <div className="faq-answer">
+                  No. Los algoritmos ejecutan reglas definidas y las operaciones
+                  financieras implican riesgo. Hybridge aporta infraestructura y
+                  herramientas; el resultado depende de la estrategia y de las
+                  condiciones del mercado.
+                </div>
+              </details>
+            </div>
+          </div>
         </section>
 
-        <section className="contact-section container" id="contact" aria-labelledby="contact-title">
-          <div className="contact-panel">
-            <div className="contact-copy"><p className="eyebrow">LET’S BUILD SOMETHING</p><h2 id="contact-title">What’s on<br />your horizon?</h2><p>A new idea. A complex challenge. A next step.<br />We’d love to hear what you have in mind.</p></div>
-            <div className="contact-action"><a className="button button-white" href={`mailto:${company.email}`}>Start a conversation <Arrow diagonal /></a><a className="contact-email" href={`mailto:${company.email}`}>{company.email}</a></div>
-            <div className="contact-orbit" aria-hidden="true" />
+        <section
+          className="contact"
+          id="contacto"
+          aria-labelledby="contact-title"
+        >
+          <div className="container contact-inner">
+            <div>
+              <p className="eyebrow">TU PRÓXIMO PASO</p>
+              <h2 id="contact-title">
+                El mercado no espera.
+                <br />
+                Tu tecnología tampoco.
+              </h2>
+              <p>
+                Contanos cómo opera tu mesa.
+                <br />
+                Encontremos la tecnología que necesitás.
+              </p>
+            </div>
+            <div className="contact-actions">
+              <a
+                className="button button-dark"
+                href="mailto:contacto@hybridge.com.ar?subject=Consulta%20sobre%20tecnolog%C3%ADa%20Hybridge"
+              >
+                Hablemos de tu proyecto
+              </a>
+              <a
+                className="contact-email"
+                href="mailto:contacto@hybridge.com.ar"
+              >
+                contacto@hybridge.com.ar
+              </a>
+            </div>
           </div>
         </section>
       </main>
-
-      <footer className="site-footer"><div className="container footer-inner"><Brand footer /><p>© {currentYear} {company.name}.</p><a className="back-top" href="#home">Back to top <span aria-hidden="true">↑</span></a></div></footer>
+      <footer className="footer">
+        <div className="container footer-top">
+          <a className="brand" href="#inicio" aria-label="Hybridge, inicio">
+            <img
+              src="/hybridge-logo.png"
+              width="650"
+              height="350"
+              alt="Hybridge"
+              loading="lazy"
+            />
+          </a>
+          <p>
+            Ingeniería y finanzas.
+            <br />A la velocidad del mercado.
+          </p>
+          <a
+            className="footer-social"
+            href="https://www.linkedin.com/company/hybridge-technologies"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn
+            <svg
+              viewBox="0 0 24 24"
+              width="19"
+              height="19"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 9h4v12H3zm6 0h4v2c1-3 8-4 8 3v7h-4v-6c0-4-4-3-4 0v6H9z" />
+            </svg>
+          </a>
+        </div>
+        <div className="container footer-bottom">
+          <span>
+            © <span>{currentYear}</span> Hybridge. Todos los derechos
+            reservados.
+          </span>
+          <span>TECNOLOGÍA HECHA EN ARGENTINA</span>
+        </div>
+      </footer>
     </>
   )
 }
