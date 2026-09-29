@@ -4,6 +4,8 @@
   --accent: #62ccef;
   --accent-hover: #91def7;
   --accent-strong: #006d96;
+  --accent-gradient: linear-gradient(110deg, #38a9df 0%, #62ccef 55%, #91def7 100%);
+  --accent-gradient-ink: linear-gradient(110deg, #005b86 0%, #006d96 55%, #0082b2 100%);
   --bg: #080c10;
   --panel: #10181e;
   --panel-raised: #15232d;
@@ -154,10 +156,13 @@ summary:focus-visible {
 }
 .button-primary {
   color: var(--bg);
-  background: var(--brand);
+  background: var(--accent);
+  background-image: var(--accent-gradient);
+  background-size: 150% 100%;
+  transition: background-position 0.2s, transform 0.2s;
 }
 .button-primary:hover {
-  background: var(--accent);
+  background-position: 100% 50%;
 }
 .button-dark {
   background: var(--bg);
@@ -602,6 +607,7 @@ details[open] .plus:after {
 }
 .contact {
   background: var(--accent);
+  background-image: var(--accent-gradient);
   color: var(--bg);
   padding: 75px 0 80px;
 }
@@ -636,6 +642,12 @@ details[open] .plus:after {
 .contact-email {
   font-size: 14px;
   color: var(--ink);
+}
+.contact-whatsapp {
+  gap: 12px;
+}
+.contact-whatsapp svg {
+  flex-shrink: 0;
 }
 .contact-email:hover {
   text-decoration: underline;
@@ -1281,6 +1293,19 @@ body {
 }
 .light-section .feature-heading h2 span {
   color: var(--accent-strong);
+}
+@supports (background-clip: text) {
+  .hero h1 span,
+  .tech-intro h2 em,
+  .feature-heading h2 span {
+    background-image: var(--accent-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .light-section .feature-heading h2 span {
+    background-image: var(--accent-gradient-ink);
+  }
 }
 .feature-heading .eyebrow {
   color: var(--muted);

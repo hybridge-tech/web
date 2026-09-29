@@ -5,7 +5,7 @@ import { useReducedMotion, useVisible } from './motion'
 
 const markets = [
   { name: 'BYMA', kind: 'Renta variable y fija' },
-  { name: 'ROFEX / MATBA', kind: 'Futuros y opciones' },
+  { name: 'A3', kind: 'Futuros y opciones' },
   { name: 'XMEV', kind: 'Mercado de valores' },
 ]
 
@@ -544,7 +544,7 @@ const runners = [
     id: 'ROLL-DLR',
     strat: 'Rolleo de futuros',
     inst: 'DLR OCT→NOV',
-    mkt: 'ROFEX / MATBA',
+    mkt: 'A3',
     mode: 'Ventana de rolleo',
     book: 'DLR NOV',
   },
@@ -552,7 +552,7 @@ const runners = [
     id: 'ARB-GGAL',
     strat: 'Arbitraje sintético',
     inst: 'GGAL / GGAL FUT',
-    mkt: 'BYMA · ROFEX / MATBA',
+    mkt: 'BYMA · A3',
     mode: 'Umbral de spread',
     book: 'GGAL',
   },

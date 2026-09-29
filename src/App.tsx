@@ -110,10 +110,6 @@ export default function App() {
             <AnimatedChart kind="hero" />
           </div>
           <div className="container hero-content">
-            <p className="eyebrow">
-              <span className="eyebrow-line"></span> MOTOR DE EJECUCIÓN · FIX
-              NATIVO
-            </p>
             <h1 id="hero-title">
               La velocidad
               <br />
@@ -134,14 +130,6 @@ export default function App() {
                 Explorá las soluciones<span className="link-line"></span>
               </a>
             </div>
-            <div className="hero-note">
-              <span className="note-symbol">+</span>
-              <span>
-                Ingeniería de sistemas.
-                <br />
-                Experiencia en mercados financieros.
-              </span>
-            </div>
           </div>
           <div className="art-caption" aria-hidden="true">
             <span className="caption-rule"></span>
@@ -150,25 +138,6 @@ export default function App() {
               <br />
               VELOCIDAD EN CADA EJECUCIÓN.
             </span>
-          </div>
-          <div className="container hero-bottom">
-            <span>EL MERCADO SE MUEVE. VOS TAMBIÉN.</span>
-            <a href="#soluciones" aria-label="Descubrir soluciones">
-              <svg
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 5v14m-6-6 6 6 6-6"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                />
-              </svg>
-            </a>
-            <span className="hero-index">01 / HYBRIDGE</span>
           </div>
         </section>
         <div className="proof-band">
@@ -180,7 +149,7 @@ export default function App() {
               <i></i>BYMA
             </span>
             <span>
-              <i></i>ROFEX / MATBA
+              <i></i>A3
             </span>
             <span>
               <i></i>XMEV
@@ -191,12 +160,13 @@ export default function App() {
         <Connectivity />
         <Strategies />
 
-        <section
+
+          {/*        <section
           className="solutions light-section"
           id="soluciones"
           aria-labelledby="solutions-title"
         >
-          <div className="container">
+        <div className="container">
             <div className="section-top">
               <p className="eyebrow">SOLUCIONES A TU MEDIDA</p>
               <span className="section-aside">
@@ -275,6 +245,7 @@ export default function App() {
             </div>
           </div>
         </section>
+        */}
 
         <HowItWorks />
         <WhyHybridge />
@@ -459,9 +430,21 @@ export default function App() {
             </div>
             <div className="contact-actions">
               <a
-                className="button button-dark"
-                href="mailto:soporte@hybridge.com.ar?subject=Consulta%20sobre%20tecnolog%C3%ADa%20Hybridge"
+                className="button button-dark contact-whatsapp"
+                href="https://wa.me/5493584301636"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Hablemos de tu proyecto por WhatsApp"
               >
+                <svg
+                  viewBox="0 0 16 16"
+                  width="22"
+                  height="22"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M13.601 2.326A7.854 7.854 0 0 0 8.004 0C3.64 0 .087 3.552.083 7.918c0 1.395.364 2.757 1.057 3.965L.016 16l4.2-1.102a7.933 7.933 0 0 0 3.784.964h.004c4.368 0 7.92-3.552 7.924-7.922a7.898 7.898 0 0 0-2.327-5.614zM8.004 14.523a6.573 6.573 0 0 1-3.352-.918l-.24-.144-2.492.654.665-2.433-.157-.25A6.56 6.56 0 0 1 1.42 7.918c0-3.626 2.953-6.579 6.588-6.579a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.67c-.004 3.63-2.957 6.583-6.592 6.583zm3.615-4.928c-.197-.099-1.17-.578-1.352-.644-.182-.066-.314-.099-.446.099-.132.198-.512.644-.628.776-.116.132-.231.149-.429.05-.198-.1-.837-.308-1.595-.984-.59-.526-.988-1.176-1.104-1.374-.116-.198-.013-.305.087-.403.089-.088.198-.231.297-.347.099-.116.132-.198.198-.33.066-.133.033-.248-.017-.347-.05-.099-.446-1.075-.611-1.472-.16-.387-.324-.334-.446-.34-.116-.006-.248-.007-.38-.007a.728.728 0 0 0-.529.248c-.182.198-.694.678-.694 1.653 0 .976.71 1.918.809 2.05.1.133 1.397 2.134 3.385 2.992.473.204.842.326 1.13.417.474.15.906.129 1.247.078.38-.057 1.17-.48 1.335-.943.166-.462.166-.859.116-.942-.05-.082-.182-.132-.38-.23z" />
+                </svg>
                 Hablemos de tu proyecto
               </a>
               <a

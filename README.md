@@ -27,7 +27,8 @@ npm run lint
 - Contact links use `soporte@hybridge.com.ar`. Set `VITE_CONTACT_EMAIL` to override it.
 
 The service descriptions are starter copy; review them before publishing.
-Contact buttons open the visitor's email app. There is no backend or contact form service.
+The “Hablemos de tu proyecto” button opens WhatsApp with +54 9 3584 30-1636.
+The email link opens the visitor's email app. There is no backend or contact form service.
 Fonts load from Google Fonts with local sans-serif fallbacks.
 
 ### Brand palette
