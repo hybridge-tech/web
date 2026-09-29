@@ -127,7 +127,7 @@ export default function App() {
               precisión y control.
             </p>
             <div className="hero-actions">
-              <a className="button button-green" href="#contacto">
+              <a className="button button-primary" href="#contacto">
                 Potenciá tu mesa
               </a>
               <a className="text-link" href="#soluciones">
@@ -460,15 +460,15 @@ export default function App() {
             <div className="contact-actions">
               <a
                 className="button button-dark"
-                href="mailto:contacto@hybridge.com.ar?subject=Consulta%20sobre%20tecnolog%C3%ADa%20Hybridge"
+                href="mailto:soporte@hybridge.com.ar?subject=Consulta%20sobre%20tecnolog%C3%ADa%20Hybridge"
               >
                 Hablemos de tu proyecto
               </a>
               <a
                 className="contact-email"
-                href="mailto:contacto@hybridge.com.ar"
+                href="mailto:soporte@hybridge.com.ar"
               >
-                contacto@hybridge.com.ar
+                soporte@hybridge.com.ar
               </a>
             </div>
           </div>

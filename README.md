@@ -30,6 +30,25 @@ The service descriptions are starter copy; review them before publishing.
 Contact buttons open the visitor's email app. There is no backend or contact form service.
 Fonts load from Google Fonts with local sans-serif fallbacks.
 
+### Brand palette
+
+The logo's cyan (`#0082B2`) anchors the UI alongside black and white. Shared
+color tokens live in `src/index.css`; canvas charts read those same tokens.
+
+| Color | Hex | Use |
+| --- | --- | --- |
+| Logo cyan | `#0082B2` | Primary buttons and logo details |
+| Light cyan | `#62CCEF` | Highlights, chart signals, focus rings, contact section |
+| Deep cyan | `#006D96` | Selected tabs and highlights on light surfaces |
+| Charcoal | `#080C10` | Page background and primary button text |
+| Slate | `#10181E` | Cards and console surfaces |
+| White | `#FFFFFF` | Logo and bright foregrounds |
+| Ice | `#F5F8FA` | Light sections and primary text on dark surfaces |
+| Cool gray | `#A5B4BF` | Secondary text on dark surfaces |
+
+Primary button text has a 4.52:1 contrast ratio against logo cyan. Light cyan
+is used for small highlights on dark surfaces, and deep cyan for text on light surfaces.
+
 To change configuration, copy `.env.example` to `.env`:
 
 ```sh

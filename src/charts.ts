@@ -1,6 +1,10 @@
-const ACCENT = '#b5f5c6'
+export type ChartPalette = {
+  accent: string
+  muted: string
+  lineRgb: string
+}
+
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x))
-const L = (a: number | string) => `rgba(219,237,223,${a})`
 const rnd = (g: number) => {
   const v = Math.sin(g * 12.9898) * 43758.5453
   return v - Math.floor(v)
@@ -31,15 +35,18 @@ export function drawStrategy(
   t: number,
   amp: number,
   s: number,
+  palette: ChartPalette,
 ) {
+  const ACCENT = palette.accent
+  const L = (a: number | string) => `rgba(${palette.lineRgb},${a})`
   const top = 28,
     base = h - 36,
     H = base - top
   ctx.globalAlpha = amp ? clamp01(t / 0.5) : 1
   ctx.font = MONO
-  ctx.fillStyle = '#8ca393'
+  ctx.fillStyle = palette.muted
   const lab = (txt: string, x: number, align: CanvasTextAlign, c?: string) => {
-    ctx.fillStyle = c || '#8ca393'
+    ctx.fillStyle = c || palette.muted
     ctx.textAlign = align
     ctx.fillText(txt, x, h - 14)
   }
@@ -127,7 +134,7 @@ export function drawStrategy(
       ctx.fillRect(x - 1, a + spr / 2 - 1, 2, 2)
     }
     lab('SPREAD OBSERVADO', 20, 'left')
-    lab('EJECUCIÓN', w - 20, 'right', '#b5f5c6')
+    lab('EJECUCIÓN', w - 20, 'right', ACCENT)
   } else if (s === 3) {
     const x0 = 72,
       y1 = top + H * 0.28,
@@ -140,7 +147,7 @@ export function drawStrategy(
       ctx.lineTo(w - 16, y + 0.5)
       ctx.stroke()
     })
-    ctx.fillStyle = '#a4b6a9'
+    ctx.fillStyle = palette.muted
     ctx.textAlign = 'left'
     ctx.fillText('AL30', 18, y1 + 3)
     ctx.fillText('AL30D', 18, y2 + 3)
@@ -157,7 +164,7 @@ export function drawStrategy(
         vline(ctx, x, y1 - 9, y1 + 9, ACCENT, 2)
         vline(ctx, x, y2 - 9, y2 + 9, ACCENT, 2)
         ctx.setLineDash([2, 3])
-        vline(ctx, x, y1 + 10, y2 - 10, 'rgba(181,245,198,0.5)')
+        vline(ctx, x, y1 + 10, y2 - 10, L(0.5))
         ctx.setLineDash([])
       } else {
         if (rnd(g + 7) < 0.3) vline(ctx, x, y1 - 4, y1 + 4, L(0.4))
@@ -165,7 +172,7 @@ export function drawStrategy(
       }
     }
     lab('OPERACIONES DE MERCADO', 20, 'left')
-    lab('EJECUCIÓN COORDINADA', w - 20, 'right', '#b5f5c6')
+    lab('EJECUCIÓN COORDINADA', w - 20, 'right', ACCENT)
   } else {
     const y0 = top + H * 0.72,
       K = 0.5,
@@ -193,7 +200,7 @@ export function drawStrategy(
     ctx.stroke()
     const xu = (0.5 + (amp ? 0.2 * Math.sin(t * 0.45) : 0.12)) * w
     vline(ctx, xu, top, base, ACCENT, 2)
-    ctx.fillStyle = '#b5f5c6'
+    ctx.fillStyle = ACCENT
     ctx.textAlign = 'left'
     ctx.fillText('SUBYACENTE', xu + 8, top + 10)
     lab('K', K * w, 'center')
@@ -210,7 +217,10 @@ export function drawBook(
   amp: number,
   id: string,
   on: boolean,
+  palette: ChartPalette,
 ) {
+  const ACCENT = palette.accent
+  const L = (a: number | string) => `rgba(${palette.lineRgb},${a})`
   const seed = id.length * 13 + id.charCodeAt(0)
   const cx = w / 2,
     lv = Math.max(8, Math.floor((w / 2 - 16) / 8)),

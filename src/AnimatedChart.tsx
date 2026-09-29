@@ -23,6 +23,13 @@ export default function AnimatedChart({
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    const styles = getComputedStyle(document.documentElement)
+    const palette = {
+      brand: styles.getPropertyValue('--brand').trim(),
+      accent: styles.getPropertyValue('--accent').trim(),
+      muted: styles.getPropertyValue('--muted').trim(),
+      lineRgb: styles.getPropertyValue('--chart-line-rgb').trim(),
+    }
     let frame = 0
     let visible = false
     const start = performance.now()
@@ -43,8 +50,8 @@ export default function AnimatedChart({
       ctx.clearRect(0, 0, w, h)
       const t = reduced ? 20 : (now - start) / 1000
       const amp = reduced ? 0 : 1
-      if (kind === 'strategy') drawStrategy(ctx, w, h, t, amp, strategy)
-      else if (kind === 'book') drawBook(ctx, w, h, t, amp, runner, active)
+      if (kind === 'strategy') drawStrategy(ctx, w, h, t, amp, strategy, palette)
+      else if (kind === 'book') drawBook(ctx, w, h, t, amp, runner, active, palette)
       else {
         const base = h * 0.77,
           peak = 0.72,
@@ -69,8 +76,8 @@ export default function AnimatedChart({
             (1 + Math.sin(t * 0.8 + i * 0.3) * 0.018 * amp)
           ctx.strokeStyle =
             Math.abs(nx - 0.69) < 0.006
-              ? '#b5f5c6'
-              : `rgba(220,238,224,${0.09 + profile * 0.26 + pulse * 0.4})`
+              ? palette.brand
+              : `rgba(${palette.lineRgb},${0.09 + profile * 0.26 + pulse * 0.4})`
           ctx.lineWidth = Math.abs(nx - 0.69) < 0.006 ? 2 : 1
           ctx.beginPath()
           ctx.moveTo(x, base)

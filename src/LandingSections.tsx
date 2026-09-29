@@ -152,7 +152,7 @@ const strategies = [
   {
     name: 'Market Making',
     path: 'M11 5v16H7m14 6V11h4',
-    viz: 'Libro de órdenes · puntas propias en verde',
+    viz: 'Libro de órdenes · puntas propias en cian',
     desc: 'Cotización continua de puntas con control de inventario y spreads dinámicos.',
     tags: [
       'Spreads y tamaños por instrumento',
@@ -174,7 +174,7 @@ const strategies = [
   {
     name: 'Arbitraje sintético',
     path: 'M16 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4M7 22a2 2 0 1 0 0 4 2 2 0 0 0 0-4m18 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M15 9 8 22m9-13 7 13M9 24h14',
-    viz: 'Spread contado / sintético · ejecución en verde',
+    viz: 'Spread contado / sintético · ejecución en cian',
     desc: 'Detección y ejecución de spreads entre contado, futuros y posiciones sintéticas.',
     tags: [
       'Monitoreo continuo de bases',
@@ -185,14 +185,14 @@ const strategies = [
   {
     name: 'FX',
     path: 'M12 8a8 8 0 1 0 0 16 8 8 0 0 0 0-16m8 0a8 8 0 1 0 0 16 8 8 0 0 0 0-16',
-    viz: 'Dos patas · ejecuciones coordinadas en verde',
+    viz: 'Dos patas · ejecuciones coordinadas en cian',
     desc: 'Operatoria de moneda con ejecución coordinada entre instrumentos y plazos.',
     tags: ['MEP, CCL y futuros', 'Patas simultáneas', 'Exposición por moneda'],
   },
   {
     name: 'Opciones',
     path: 'M3 23h12L29 7M3 27h26',
-    viz: 'Perfil de resultado · subyacente en verde',
+    viz: 'Perfil de resultado · subyacente en cian',
     desc: 'Cotización y cobertura de opciones con gestión de griegas por estrategia.',
     tags: [
       'Cotización sobre cadenas',
